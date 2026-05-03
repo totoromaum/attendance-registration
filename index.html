@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부산남부교육지원청 연수 등록 시스템</title>
+<style>
+  :root {
+    --primary: #1a5490;
+    --primary-dark: #0d3d6e;
+    --accent: #2e7dd7;
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+  header p { margin: 6px 0 0; font-size: 14px; opacity: 0.9; }
+
+  .tabs {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .tab {
+    flex: 1;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 80px; }
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 16px; font-weight: 600; margin: 0 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-info { background: #dbeafe; color: #1e40af; }
+  .badge-warn { background: #fef3c7; color: #92400e; }
+  .badge-success { background: #d1fae5; color: #065f46; }
+  .badge-danger { background: #fee2e2; color: #991b1b; }
+
+  label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    background: white; color: var(--text);
+    -webkit-appearance: none; appearance: none;
+    transition: border-color 0.15s;
+  }
+  select:focus, input:focus { outline: none; border-color: var(--accent); }
+  select:disabled { background: #f9fafb; color: #9ca3af; }
+  .field { margin-bottom: 16px; }
+
+  button {
+    width: 100%; padding: 14px; font-size: 16px; font-weight: 600;
+    background: var(--primary); color: white; border: none;
+    border-radius: 10px; cursor: pointer; transition: background 0.15s;
+  }
+  button:hover { background: var(--primary-dark); }
+  button:disabled { background: #9ca3af; cursor: not-allowed; }
+  button.secondary { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
+  button.secondary:hover { background: #f0f7ff; }
+  button.danger { background: var(--danger); }
+  button.danger:hover { background: #b91c1c; }
+
+  .verify-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px; background: #f9fafb; border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .verify-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; flex-shrink: 0;
+  }
+  .verify-icon.pending { background: #f3f4f6; color: #9ca3af; }
+  .verify-icon.ok { background: #d1fae5; color: #065f46; }
+  .verify-icon.fail { background: #fee2e2; color: #991b1b; }
+  .verify-text { flex: 1; font-size: 14px; }
+  .verify-text small { display: block; color: var(--muted); font-size: 12px; }
+
+  .session-code {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 32px; font-weight: 700; letter-spacing: 6px;
+    text-align: center; padding: 20px;
+    background: linear-gradient(135deg, #1a5490 0%, #2e7dd7 100%);
+    color: white; border-radius: 12px; margin: 12px 0;
+  }
+  .session-meta {
+    text-align: center; font-size: 13px; color: var(--muted);
+    margin-top: -4px; margin-bottom: 12px;
+  }
+
+  .attendee-list {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .attendee-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+  }
+  .attendee-item:last-child { border-bottom: none; }
+  .attendee-name { font-weight: 600; }
+  .attendee-meta { font-size: 12px; color: var(--muted); }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: #f9fafb; padding: 14px; border-radius: 10px; text-align: center;
+  }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--primary); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .search-input { margin-bottom: 12px; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: white; padding: 12px 20px;
+    border-radius: 10px; font-size: 14px;
+    opacity: 0; transition: opacity 0.3s; z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2); max-width: 90vw;
+  }
+  .toast.show { opacity: 1; }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+
+  .hidden { display: none !important; }
+
+  .info-note {
+    font-size: 13px; color: var(--muted); padding: 10px 12px;
+    background: #f0f7ff; border-left: 3px solid var(--accent);
+    border-radius: 6px; margin-bottom: 12px;
+  }
+
+  .admin-pass {
+    padding: 8px 10px; font-size: 13px; width: 140px; display: inline-block;
+  }
+  .admin-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .admin-bar button { width: auto; padding: 8px 14px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>부산남부교육지원청 연수 등록 시스템</h1>
+  <p>대강당 직원 연수 참석 확인</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="register">참석 등록</div>
+  <div class="tab" data-tab="admin">관리자</div>
+</div>
+
+<div class="container">
+
+  <!-- 참석 등록 탭 -->
+  <div id="tab-register">
+    <div class="card">
+      <div class="info-note">
+        대강당 현장 화면에 표시된 <b>6자리 인증코드</b>와 <b>현재 위치(GPS)</b>를 통해 본인의 현장 참석이 확인되어야 등록이 완료됩니다.
+      </div>
+
+      <h3 class="section-title">1. 소속 선택</h3>
+      <div class="field">
+        <label for="sel-dept">과(부서)</label>
+        <select id="sel-dept"><option value="">— 선택하세요 —</option></select>
+      </div>
+      <div class="field">
+        <label for="sel-team">팀</label>
+        <select id="sel-team" disabled><option value="">먼저 과를 선택하세요</option></select>
+      </div>
+      <div class="field">
+        <label for="sel-name">이름</label>
+        <select id="sel-name" disabled><option value="">먼저 팀을 선택하세요</option></select>
+      </div>
+
+      <h3 class="section-title" style="margin-top:24px;">2. 현장 인증</h3>
+
+      <div class="field">
+        <label for="inp-code">현장 인증코드 (6자리)</label>
+        <input type="text" id="inp-code" maxlength="6" placeholder="강당 화면에 표시된 코드 입력"
+               inputmode="numeric" autocomplete="off" style="letter-spacing: 8px; font-size: 20px; font-weight:700; text-align:center;">
+      </div>
+
+      <div class="verify-row">
+        <div class="verify-icon pending" id="ico-geo">●</div>
+        <div class="verify-text">
+          <div id="txt-geo">위치 확인 대기 중</div>
+          <small id="sub-geo">아래 버튼으로 GPS 권한을 허용해주세요.</small>
+        </div>
+      </div>
+      <button class="secondary" id="btn-geo" style="margin-bottom: 16px;">현재 위치 확인하기</button>
+
+      <button id="btn-submit">참석 등록 완료</button>
+    </div>
+  </div>
+
+  <!-- 관리자 탭 -->
+  <div id="tab-admin" class="hidden">
+    <div class="card">
+      <h3 class="section-title">관리자 패널</h3>
+      <div class="admin-bar">
+        <input type="password" id="admin-pass" class="admin-pass" placeholder="관리자 PIN">
+        <button class="secondary" id="btn-admin-login">접속</button>
+      </div>
+
+      <div id="admin-content" class="hidden">
+
+        <h4 style="margin-top:0;">현장 인증코드</h4>
+        <div class="session-code" id="session-code">------</div>
+        <div class="session-meta">
+          남은 시간: <span id="code-timer">--</span>초 · 코드는 5분마다 자동 변경
+        </div>
+        <button class="secondary" id="btn-regen-code" style="margin-bottom: 16px;">새 코드 즉시 발급</button>
+
+        <h4>강당 위치 설정</h4>
+        <div class="info-note">
+          이 위치를 기준으로 반경 80m 이내에서만 등록이 허용됩니다.
+        </div>
+        <div class="field">
+          <label>위도 / 경도</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="venue-lat" placeholder="위도" style="flex:1;">
+            <input type="text" id="venue-lng" placeholder="경도" style="flex:1;">
+          </div>
+        </div>
+        <button class="secondary" id="btn-set-venue" style="margin-bottom: 16px;">현재 위치를 강당 위치로 설정</button>
+
+        <h4>참석자 명단 <span class="badge badge-info" id="cnt-badge">0명</span></h4>
+        <input type="text" id="search-attendee" class="search-input" placeholder="이름 또는 부서로 검색...">
+        <div class="stat-grid" id="stat-grid"></div>
+        <ul class="attendee-list" id="attendee-list"></ul>
+
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="secondary" id="btn-export" style="flex:1;">CSV 내보내기</button>
+          <button class="danger" id="btn-clear" style="flex:1;">전체 초기화</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   부산남부교육지원청 — 부서/팀/직원 데이터 (이름은 임의 표본)
+   웹 검색으로 확인된 6개 과 체계를 기반으로 구성
+============================================================ */
+const ORG = {
+  "행정지원과": {
+    "총무팀":   ["김민수", "박지영", "이도현", "정수빈", "최강민"],
+    "감사팀":   ["윤서연", "한지호", "오태현", "임예린", "강도윤"],
+    "관리팀":   ["송미경", "백승호", "조하늘", "권지민", "황우진"],
+    "경리팀":   ["문나영", "신유찬", "배소율", "장민재", "유다은"]
+  },
+  "유초등교육지원과": {
+    "초등교육팀":   ["이정아", "김태경", "박서윤", "정현우", "최예나"],
+    "유아교육팀":   ["송지원", "한채영", "오민서", "임도경", "강서영"],
+    "초등학사팀":   ["윤하늘", "조은비", "백지훈", "권유진", "황민호"]
+  },
+  "중등교육지원과": {
+    "중등교육팀":   ["김영수", "이수민", "박준호", "정민지", "최윤서"],
+    "생활교육팀":   ["송태윤", "한지수", "오승빈", "임채원", "강하준"],
+    "중등학사팀":   ["윤소연", "조지민", "백다영", "권시우", "황예진"],
+    "Wee센터":      ["문상미", "신예슬", "배준영", "장유빈", "유시연"]
+  },
+  "학생건강지원과": {
+    "보건안전팀":   ["김지혜", "이상훈", "박혜진", "정우석", "최보라"],
+    "급식지원팀":   ["송미영", "한대성", "오수진", "임현지", "강민준"],
+    "체육예술팀":   ["윤재훈", "조민경", "백수아", "권태민", "황지연"]
+  },
+  "학교지원과": {
+    "학교지원1팀": ["김성호", "이미라", "박종현", "정혜원", "최승우"],
+    "학교지원2팀": ["송재민", "한가영", "오지석", "임소희", "강현태"]
+  },
+  "시설과": {
+    "시설1팀":     ["김광수", "이동훈", "박재성", "정대호", "최영민"],
+    "시설2팀":     ["송기철", "한승우", "오정환", "임병준", "강성재"],
+    "시설안전팀": ["윤도현", "조재웅", "백창민", "권민철", "황태영"]
+  }
+};
+
+/* ============================================================
+   기본 강당 좌표(부산남부교육지원청 청사)
+   필요 시 관리자 탭에서 변경 가능
+============================================================ */
+const DEFAULT_VENUE = { lat: 35.1296, lng: 129.0942 }; // 부산 남구 부근
+const ALLOWED_RADIUS_M = 80; // 80m 반경
+
+/* 관리자 PIN — 운영 시 환경에 맞게 변경 */
+const ADMIN_PIN = "1234";
+
+/* ============================================================
+   상태 (메모리 + localStorage)
+============================================================ */
+const STORAGE = {
+  attendees: "training_attendees",
+  venue: "training_venue",
+  session: "training_session"
+};
+
+let geoStatus = { ok: false, lat: null, lng: null, distance: null };
+let currentVenue = JSON.parse(localStorage.getItem(STORAGE.venue) || "null") || DEFAULT_VENUE;
+
+/* ============================================================
+   화면 초기화 — 드롭다운 채우기
+============================================================ */
+const $ = (s) => document.querySelector(s);
+const selDept = $("#sel-dept");
+const selTeam = $("#sel-team");
+const selName = $("#sel-name");
+
+Object.keys(ORG).forEach(dept => {
+  const opt = document.createElement("option");
+  opt.value = dept; opt.textContent = dept;
+  selDept.appendChild(opt);
+});
+
+selDept.addEventListener("change", () => {
+  selTeam.innerHTML = '<option value="">— 선택하세요 —</option>';
+  selName.innerHTML = '<option value="">먼저 팀을 선택하세요</option>';
+  selName.disabled = true;
+  if (!selDept.value) { selTeam.disabled = true; return; }
+  Object.keys(ORG[selDept.value]).forEach(team => {
+    const opt = document.createElement("option");
+    opt.value = team; opt.textContent = team;
+    selTeam.appendChild(opt);
+  });
+  selTeam.disabled = false;
+});
+
+selTeam.addEventListener("change", () => {
+  selName.innerHTML = '<option value="">— 선택하세요 —</option>';
+  if (!selTeam.value) { selName.disabled = true; return; }
+  ORG[selDept.value][selTeam.value].forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name; opt.textContent = name;
+    selName.appendChild(opt);
+  });
+  selName.disabled = false;
+});
+
+/* ============================================================
+   탭 전환
+============================================================ */
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    const id = t.dataset.tab;
+    document.getElementById("tab-register").classList.toggle("hidden", id !== "register");
+    document.getElementById("tab-admin").classList.toggle("hidden", id !== "admin");
+  });
+});
+
+/* ============================================================
+   토스트
+============================================================ */
+function toast(msg, type = "") {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.className = "toast show " + type;
+  setTimeout(() => el.className = "toast", 2500);
+}
+
+/* ============================================================
+   GPS — 위치 확인 + 거리 계산
+============================================================ */
+function distanceMeters(a, b) {
+  const R = 6371000;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const x = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+
+$("#btn-geo").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    setGeo(false, "이 기기는 위치 확인을 지원하지 않습니다.");
+    return;
+  }
+  $("#btn-geo").disabled = true;
+  $("#btn-geo").textContent = "위치 확인 중...";
+  navigator.geolocation.getCurrentPosition(pos => {
+    const me = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    const d = Math.round(distanceMeters(me, currentVenue));
+    geoStatus = { ok: d <= ALLOWED_RADIUS_M, lat: me.lat, lng: me.lng, distance: d };
+    if (geoStatus.ok) {
+      setGeo(true, `현장 위치 확인됨 (강당으로부터 약 ${d}m)`);
+    } else {
+      setGeo(false, `강당에서 약 ${d}m 떨어져 있어 등록이 제한됩니다 (허용 ${ALLOWED_RADIUS_M}m 이내).`);
+    }
+    $("#btn-geo").disabled = false;
+    $("#btn-geo").textContent = "위치 다시 확인";
+  }, err => {
+    setGeo(false, "위치 권한이 거부되었거나 확인에 실패했습니다.");
+    $("#btn-geo").disabled = false;
+    $("#btn-geo").textContent = "위치 확인 다시 시도";
+  }, { enableHighAccuracy: true, timeout: 10000 });
+});
+
+function setGeo(ok, message) {
+  const ico = $("#ico-geo");
+  ico.className = "verify-icon " + (ok ? "ok" : "fail");
+  ico.textContent = ok ? "✓" : "✗";
+  $("#txt-geo").textContent = ok ? "위치 확인 완료" : "위치 확인 실패";
+  $("#sub-geo").textContent = message;
+}
+
+/* ============================================================
+   세션 코드 — 5분마다 자동 변경
+============================================================ */
+function genSession() {
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const session = { code, createdAt: Date.now(), ttlMs: 5 * 60 * 1000 };
+  localStorage.setItem(STORAGE.session, JSON.stringify(session));
+  return session;
+}
+function getSession() {
+  let s = JSON.parse(localStorage.getItem(STORAGE.session) || "null");
+  if (!s || (Date.now() - s.createdAt) > s.ttlMs) s = genSession();
+  return s;
+}
+function refreshSessionUI() {
+  const s = getSession();
+  $("#session-code").textContent = s.code;
+  const remain = Math.max(0, Math.floor((s.ttlMs - (Date.now() - s.createdAt)) / 1000));
+  $("#code-timer").textContent = remain;
+  if (remain === 0) refreshSessionUI();
+}
+setInterval(refreshSessionUI, 1000);
+
+/* ============================================================
+   참석 등록
+============================================================ */
+$("#btn-submit").addEventListener("click", () => {
+  const dept = selDept.value, team = selTeam.value, name = selName.value;
+  const code = $("#inp-code").value.trim();
+
+  if (!dept || !team || !name) return toast("소속과 이름을 모두 선택해주세요.", "error");
+  if (!code || code.length !== 6) return toast("6자리 인증코드를 입력해주세요.", "error");
+  if (!geoStatus.ok) return toast("현장 위치 확인이 필요합니다.", "error");
+
+  const session = getSession();
+  if (code !== session.code) return toast("인증코드가 올바르지 않습니다.", "error");
+
+  // 중복 등록 차단
+  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
+  const dup = list.find(a => a.dept === dept && a.team === team && a.name === name);
+  if (dup) return toast(`이미 ${name}님은 등록되어 있습니다.`, "error");
+
+  list.push({
+    dept, team, name,
+    registeredAt: new Date().toISOString(),
+    distance: geoStatus.distance,
+    deviceId: getDeviceId()
+  });
+  localStorage.setItem(STORAGE.attendees, JSON.stringify(list));
+  toast(`${name}님 참석 등록 완료!`, "success");
+
+  // 폼 초기화
+  selDept.value = ""; selTeam.innerHTML = '<option value="">먼저 과를 선택하세요</option>';
+  selName.innerHTML = '<option value="">먼저 팀을 선택하세요</option>';
+  selTeam.disabled = true; selName.disabled = true;
+  $("#inp-code").value = "";
+  renderAdmin();
+});
+
+function getDeviceId() {
+  let id = localStorage.getItem("device_id");
+  if (!id) {
+    id = "dev_" + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
+/* ============================================================
+   관리자 패널
+============================================================ */
+$("#btn-admin-login").addEventListener("click", () => {
+  if ($("#admin-pass").value === ADMIN_PIN) {
+    $("#admin-content").classList.remove("hidden");
+    $("#venue-lat").value = currentVenue.lat;
+    $("#venue-lng").value = currentVenue.lng;
+    refreshSessionUI();
+    renderAdmin();
+  } else {
+    toast("PIN이 올바르지 않습니다.", "error");
+  }
+});
+
+$("#btn-regen-code").addEventListener("click", () => {
+  genSession(); refreshSessionUI();
+  toast("새 인증코드가 발급되었습니다.", "success");
+});
+
+$("#btn-set-venue").addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(pos => {
+    currentVenue = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    localStorage.setItem(STORAGE.venue, JSON.stringify(currentVenue));
+    $("#venue-lat").value = currentVenue.lat;
+    $("#venue-lng").value = currentVenue.lng;
+    toast("강당 위치가 현재 위치로 설정되었습니다.", "success");
+  }, () => toast("위치 확인 실패", "error"));
+});
+
+[$("#venue-lat"), $("#venue-lng")].forEach(inp => {
+  inp.addEventListener("change", () => {
+    const lat = parseFloat($("#venue-lat").value), lng = parseFloat($("#venue-lng").value);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      currentVenue = { lat, lng };
+      localStorage.setItem(STORAGE.venue, JSON.stringify(currentVenue));
+      toast("강당 좌표가 업데이트되었습니다.", "success");
+    }
+  });
+});
+
+$("#search-attendee").addEventListener("input", renderAdmin);
+
+function renderAdmin() {
+  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
+  const q = $("#search-attendee").value.toLowerCase();
+  const filtered = list.filter(a =>
+    a.name.toLowerCase().includes(q) ||
+    a.dept.toLowerCase().includes(q) ||
+    a.team.toLowerCase().includes(q));
+
+  $("#cnt-badge").textContent = `${filtered.length}명`;
+
+  // 통계
+  const byDept = {};
+  list.forEach(a => byDept[a.dept] = (byDept[a.dept] || 0) + 1);
+  const top3 = Object.entries(byDept).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const grid = $("#stat-grid");
+  grid.innerHTML = `
+    <div class="stat-card"><div class="stat-num">${list.length}</div><div class="stat-label">전체 참석</div></div>
+    <div class="stat-card"><div class="stat-num">${Object.keys(byDept).length}</div><div class="stat-label">참여 부서</div></div>
+    <div class="stat-card"><div class="stat-num">${top3[0] ? top3[0][1] : 0}</div><div class="stat-label">최다 부서 인원</div></div>
+  `;
+
+  const ul = $("#attendee-list");
+  ul.innerHTML = "";
+  if (filtered.length === 0) {
+    ul.innerHTML = `<li class="attendee-item" style="color:var(--muted); justify-content:center;">등록된 참석자가 없습니다.</li>`;
+    return;
+  }
+  filtered
+    .sort((a,b) => new Date(b.registeredAt) - new Date(a.registeredAt))
+    .forEach(a => {
+      const li = document.createElement("li");
+      li.className = "attendee-item";
+      const t = new Date(a.registeredAt);
+      const time = t.toLocaleString("ko-KR", { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+      li.innerHTML = `
+        <div>
+          <div class="attendee-name">${a.name}</div>
+          <div class="attendee-meta">${a.dept} · ${a.team}</div>
+        </div>
+        <div class="attendee-meta" style="text-align:right;">
+          ${time}<br>
+          <span class="badge badge-success">${a.distance}m</span>
+        </div>`;
+      ul.appendChild(li);
+    });
+}
+
+$("#btn-export").addEventListener("click", () => {
+  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
+  if (list.length === 0) return toast("내보낼 데이터가 없습니다.", "error");
+  const header = "부서,팀,이름,등록시각,GPS거리(m),기기ID";
+  const rows = list.map(a => [
+    a.dept, a.team, a.name,
+    new Date(a.registeredAt).toLocaleString("ko-KR"),
+    a.distance, a.deviceId
+  ].join(","));
+  const csv = "﻿" + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `연수참석자_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("CSV 파일이 다운로드되었습니다.", "success");
+});
+
+$("#btn-clear").addEventListener("click", () => {
+  if (!confirm("정말 모든 참석 기록을 삭제하시겠습니까?")) return;
+  localStorage.removeItem(STORAGE.attendees);
+  renderAdmin();
+  toast("참석 기록이 초기화되었습니다.", "success");
+});
+
+renderAdmin();
+</script>
+</body>
+</html>
