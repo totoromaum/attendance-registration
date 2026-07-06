@@ -3,638 +3,1259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>부산남부교육지원청 연수 등록 시스템</title>
+<title>현장 참석 등록</title>
 <style>
   :root {
-    --primary: #1a5490;
-    --primary-dark: #0d3d6e;
-    --accent: #2e7dd7;
-    --bg: #f4f7fb;
-    --card: #ffffff;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+    --paper: #F2F3EF;
+    --card: #FFFFFF;
+    --ink: #21251F;
+    --muted: #6E6A5E;
+    --line: #E0DFD6;
+    --pine: #1E5748;
+    --pine-deep: #143E33;
+    --pine-tint: #E7EFEA;
+    --seal: #C0392B;
+    --seal-tint: #F9E9E6;
+    --amber: #B07C10;
+    --amber-tint: #FBF3DF;
+    --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Consolas", monospace;
     color-scheme: light;
   }
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard,
+                 "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
   }
-  header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    padding: 24px 20px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  header h1 { margin: 0; font-size: 22px; font-weight: 700; }
-  header p { margin: 6px 0 0; font-size: 14px; opacity: 0.9; }
 
-  .tabs {
-    display: flex;
-    background: white;
-    border-bottom: 1px solid var(--border);
+  /* ---------- 헤더 ---------- */
+  header {
+    background: var(--pine-deep);
+    color: #F4F6F1;
+    padding: 26px 20px 22px;
+  }
+  .hd-inner { max-width: 680px; margin: 0 auto; }
+  .hd-eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.28em;
+    color: #A9C4B8; text-transform: uppercase; margin-bottom: 8px;
+  }
+  header h1 {
+    margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em;
+    line-height: 1.3; word-break: keep-all;
+  }
+  .hd-venue {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 10px; padding: 4px 12px;
+    border: 1px solid rgba(244,246,241,0.35); border-radius: 999px;
+    font-size: 13px; color: #D8E2DC;
+  }
+  .hd-venue:empty { display: none; }
+
+  /* ---------- 탭 ---------- */
+  .tabs-wrap {
     position: sticky; top: 0; z-index: 5;
+    background: var(--paper); padding: 14px 16px 4px;
+  }
+  .tabs {
+    max-width: 680px; margin: 0 auto;
+    display: flex; gap: 4px; padding: 4px;
+    background: #E6E7E1; border-radius: 12px;
   }
   .tab {
-    flex: 1;
-    padding: 14px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--muted);
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
+    flex: 1; padding: 10px; border: none; border-radius: 9px;
+    background: transparent; color: var(--muted);
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
   }
-  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .tab.active { background: var(--card); color: var(--pine-deep); box-shadow: 0 1px 4px rgba(20,40,30,0.10); }
+  .tab:focus-visible { outline: 2px solid var(--pine); outline-offset: 2px; }
 
-  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 80px; }
+  .container { max-width: 680px; margin: 0 auto; padding: 16px 16px 90px; }
+
   .card {
     background: var(--card);
-    border-radius: 14px;
-    padding: 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    margin-bottom: 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 14px;
   }
-  .section-title {
-    font-size: 16px; font-weight: 600; margin: 0 0 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 999px;
-    font-size: 12px; font-weight: 600;
-  }
-  .badge-info { background: #dbeafe; color: #1e40af; }
-  .badge-warn { background: #fef3c7; color: #92400e; }
-  .badge-success { background: #d1fae5; color: #065f46; }
-  .badge-danger { background: #fee2e2; color: #991b1b; }
 
-  label {
-    display: block; font-size: 13px; font-weight: 600;
-    color: var(--text); margin-bottom: 6px;
+  /* ---------- 스텝 ---------- */
+  .step-head { display: flex; align-items: center; gap: 10px; margin: 4px 0 14px; }
+  .step-no {
+    width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+    background: var(--pine); color: #fff;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 14px; font-weight: 700;
   }
-  select, input[type="text"], input[type="number"] {
-    width: 100%; padding: 12px 14px; font-size: 15px;
-    border: 1.5px solid var(--border); border-radius: 10px;
-    background: white; color: var(--text);
+  .step-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .step-sub { font-size: 13px; color: var(--muted); margin: -8px 0 14px 36px; }
+
+  /* ---------- 폼 ---------- */
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  select, input[type="text"], input[type="password"], input[type="number"], textarea {
+    width: 100%; padding: 12px 14px; font: inherit; font-size: 15px;
+    border: 1.5px solid var(--line); border-radius: 10px;
+    background: #fff; color: var(--ink);
     -webkit-appearance: none; appearance: none;
-    transition: border-color 0.15s;
   }
-  select:focus, input:focus { outline: none; border-color: var(--accent); }
-  select:disabled { background: #f9fafb; color: #9ca3af; }
-  .field { margin-bottom: 16px; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236E6A5E' stroke-width='1.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 38px;
+  }
+  select:focus, input:focus, textarea:focus { outline: none; border-color: var(--pine); }
+  select:focus-visible, input:focus-visible, textarea:focus-visible,
+  button:focus-visible, summary:focus-visible { outline: 2px solid var(--pine); outline-offset: 2px; }
+  select:disabled { background-color: #F5F5F1; color: #9B978B; }
+  .field { margin-bottom: 14px; }
+  textarea { font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+
+  .code-input {
+    font-family: var(--mono); font-size: 26px; font-weight: 700;
+    letter-spacing: 0.45em; text-align: center; text-indent: 0.45em;
+  }
 
   button {
-    width: 100%; padding: 14px; font-size: 16px; font-weight: 600;
-    background: var(--primary); color: white; border: none;
-    border-radius: 10px; cursor: pointer; transition: background 0.15s;
+    width: 100%; padding: 14px; font: inherit; font-size: 16px; font-weight: 700;
+    background: var(--pine); color: #fff; border: none; border-radius: 11px;
+    cursor: pointer; word-break: keep-all;
   }
-  button:hover { background: var(--primary-dark); }
-  button:disabled { background: #9ca3af; cursor: not-allowed; }
-  button.secondary { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
-  button.secondary:hover { background: #f0f7ff; }
-  button.danger { background: var(--danger); }
-  button.danger:hover { background: #b91c1c; }
+  button:hover { background: var(--pine-deep); }
+  button:disabled { background: #B5B8AE; cursor: not-allowed; }
+  button.secondary { background: #fff; color: var(--pine-deep); border: 1.5px solid var(--pine); font-weight: 600; }
+  button.secondary:hover { background: var(--pine-tint); }
+  button.danger { background: #fff; color: var(--seal); border: 1.5px solid var(--seal); font-weight: 600; }
+  button.danger:hover { background: var(--seal-tint); }
+  button.compact { width: auto; padding: 9px 16px; font-size: 13px; border-radius: 9px; }
 
-  .verify-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px; background: #f9fafb; border-radius: 10px;
-    margin-bottom: 10px;
+  .note {
+    font-size: 13px; color: var(--muted);
+    padding: 10px 14px; background: var(--pine-tint);
+    border-radius: 10px; margin-bottom: 16px; word-break: keep-all;
   }
-  .verify-icon {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700; flex-shrink: 0;
-  }
-  .verify-icon.pending { background: #f3f4f6; color: #9ca3af; }
-  .verify-icon.ok { background: #d1fae5; color: #065f46; }
-  .verify-icon.fail { background: #fee2e2; color: #991b1b; }
-  .verify-text { flex: 1; font-size: 14px; }
-  .verify-text small { display: block; color: var(--muted); font-size: 12px; }
+  .note.warn { background: var(--amber-tint); color: #7A5A10; }
+  .note.err { background: var(--seal-tint); color: #8E2B20; }
 
-  .session-code {
-    font-family: "SF Mono", Menlo, monospace;
-    font-size: 32px; font-weight: 700; letter-spacing: 6px;
-    text-align: center; padding: 20px;
-    background: linear-gradient(135deg, #1a5490 0%, #2e7dd7 100%);
-    color: white; border-radius: 12px; margin: 12px 0;
+  /* ---------- 위치 확인 행 ---------- */
+  .geo-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; background: #F7F8F4; border: 1px solid var(--line);
+    border-radius: 10px; margin-bottom: 10px;
   }
-  .session-meta {
-    text-align: center; font-size: 13px; color: var(--muted);
-    margin-top: -4px; margin-bottom: 12px;
+  .geo-dot {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; font-size: 15px; font-weight: 700;
+    background: #ECEDE7; color: #9B978B;
+  }
+  .geo-dot.ok { background: var(--pine-tint); color: var(--pine-deep); }
+  .geo-dot.fail { background: var(--seal-tint); color: var(--seal); }
+  .geo-text { flex: 1; font-size: 14px; font-weight: 600; }
+  .geo-text small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 1px; }
+
+  /* ---------- 출석 확인증 (티켓) ---------- */
+  .ticket {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .ticket-top { position: relative; padding: 26px 22px 20px; }
+  .ticket-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3em;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .ticket-name { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .ticket-affil { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .ticket-cut {
+    position: relative; height: 0;
+    border-top: 2px dashed #D8D6CC;
+  }
+  .ticket-cut::before, .ticket-cut::after {
+    content: ""; position: absolute; top: -11px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--paper); border: 1px solid var(--line);
+  }
+  .ticket-cut::before { left: -11px; }
+  .ticket-cut::after { right: -11px; }
+  .ticket-meta { padding: 16px 22px 20px; }
+  .meta-row {
+    display: flex; justify-content: space-between; gap: 12px;
+    font-size: 13px; padding: 5px 0;
+  }
+  .meta-row dt { color: var(--muted); margin: 0; }
+  .meta-row dd { margin: 0; font-family: var(--mono); font-weight: 600; text-align: right; }
+
+  .stamp {
+    position: absolute; right: 18px; top: 30px;
+    width: 88px; height: 88px; border-radius: 50%;
+    border: 4px solid var(--seal);
+    box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 3.5px var(--seal);
+    color: var(--seal);
+    display: grid; place-items: center;
+    font-size: 26px; font-weight: 800; letter-spacing: 0.22em; text-indent: 0.22em;
+    transform: rotate(-12deg);
+    opacity: 0.92;
+    mix-blend-mode: multiply;
+    animation: stampIn 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+    pointer-events: none;
+  }
+  @keyframes stampIn {
+    0%   { transform: rotate(-20deg) scale(2.1); opacity: 0; }
+    65%  { opacity: 0.95; }
+    100% { transform: rotate(-12deg) scale(1); opacity: 0.92; }
   }
 
-  .attendee-list {
-    list-style: none; padding: 0; margin: 0;
+  /* ---------- 운영자: 코드 보드 ---------- */
+  .code-board {
+    background: var(--pine-deep); border-radius: 14px;
+    padding: 20px 20px 16px; margin-bottom: 6px; color: #F4F6F1;
   }
-  .attendee-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 14px; border-bottom: 1px solid var(--border);
+  .code-board-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .code-serial {
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    background: rgba(244,246,241,0.14); color: #CBDCD3;
+    padding: 3px 10px; border-radius: 999px;
   }
-  .attendee-item:last-child { border-bottom: none; }
-  .attendee-name { font-weight: 600; }
-  .attendee-meta { font-size: 12px; color: var(--muted); }
+  .code-remain { font-family: var(--mono); font-size: 13px; color: #CBDCD3; }
+  .code-digits {
+    font-family: var(--mono); font-size: 46px; font-weight: 700;
+    letter-spacing: 0.28em; text-indent: 0.28em; text-align: center;
+    padding: 8px 0 12px;
+  }
+  .code-bar { height: 4px; background: rgba(244,246,241,0.18); border-radius: 2px; overflow: hidden; }
+  .code-bar i { display: block; height: 100%; background: #8FD0B4; border-radius: 2px; transition: width 1s linear; }
+  .code-bar i.low { background: #E8896F; }
+  .code-hint { font-size: 12px; color: #A9C4B8; text-align: center; margin-top: 10px; }
 
-  .stat-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    margin-bottom: 16px;
-  }
+  .row { display: flex; gap: 8px; }
+  .row > * { flex: 1; }
+  .row-tight { display: flex; gap: 8px; align-items: center; }
+
+  /* ---------- 현황 ---------- */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
   .stat-card {
-    background: #f9fafb; padding: 14px; border-radius: 10px; text-align: center;
+    background: #F7F8F4; border: 1px solid var(--line);
+    padding: 12px 8px; border-radius: 10px; text-align: center;
   }
-  .stat-num { font-size: 22px; font-weight: 700; color: var(--primary); }
+  .stat-num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--pine-deep); }
   .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-  .search-input { margin-bottom: 12px; }
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 700; vertical-align: middle;
+  }
+  .badge-ok { background: var(--pine-tint); color: var(--pine-deep); }
+  .badge-warn { background: var(--amber-tint); color: #7A5A10; }
+  .badge-err { background: var(--seal-tint); color: #8E2B20; }
+  .badge-mute { background: #ECEDE7; color: var(--muted); }
+
+  .plist { list-style: none; padding: 0; margin: 0; }
+  .plist li {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 11px 2px; border-bottom: 1px solid var(--line);
+  }
+  .plist li:last-child { border-bottom: none; }
+  .p-name { font-weight: 700; font-size: 15px; }
+  .p-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .p-right { text-align: right; font-size: 12px; color: var(--muted); font-family: var(--mono); flex-shrink: 0; }
+  .p-empty { justify-content: center; color: var(--muted); font-size: 14px; }
+
+  details {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; margin-bottom: 14px;
+  }
+  summary {
+    list-style: none; cursor: pointer; padding: 18px 20px;
+    font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--mono); font-size: 18px; color: var(--muted); }
+  details[open] summary::after { content: "−"; }
+  .details-body { padding: 0 20px 20px; }
+
+  .section-title { font-size: 15px; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .sub-title { font-size: 13px; font-weight: 700; margin: 18px 0 8px; }
 
   .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: var(--text); color: white; padding: 12px 20px;
-    border-radius: 10px; font-size: 14px;
-    opacity: 0; transition: opacity 0.3s; z-index: 100;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2); max-width: 90vw;
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: #fff; padding: 12px 20px;
+    border-radius: 10px; font-size: 14px; max-width: 90vw;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100;
+    box-shadow: 0 6px 20px rgba(20,25,20,0.25);
   }
   .toast.show { opacity: 1; }
-  .toast.success { background: var(--success); }
-  .toast.error { background: var(--danger); }
+  .toast.success { background: var(--pine-deep); }
+  .toast.error { background: var(--seal); }
 
   .hidden { display: none !important; }
+  .mt8 { margin-top: 8px; } .mt16 { margin-top: 16px; }
 
-  .info-note {
-    font-size: 13px; color: var(--muted); padding: 10px 12px;
-    background: #f0f7ff; border-left: 3px solid var(--accent);
-    border-radius: 6px; margin-bottom: 12px;
+  @media (prefers-reduced-motion: reduce) {
+    .stamp { animation: none; }
+    .code-bar i { transition: none; }
   }
-
-  .admin-pass {
-    padding: 8px 10px; font-size: 13px; width: 140px; display: inline-block;
-  }
-  .admin-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-  .admin-bar button { width: auto; padding: 8px 14px; font-size: 13px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>부산남부교육지원청 연수 등록 시스템</h1>
-  <p>대강당 직원 연수 참석 확인</p>
+  <div class="hd-inner">
+    <div class="hd-eyebrow">현장 참석 확인</div>
+    <h1 id="hd-title">참석 등록</h1>
+    <span class="hd-venue" id="hd-venue"></span>
+  </div>
 </header>
 
-<div class="tabs">
-  <div class="tab active" data-tab="register">참석 등록</div>
-  <div class="tab" data-tab="admin">관리자</div>
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-tab="register" aria-selected="true">참석 등록</button>
+    <button class="tab" role="tab" data-tab="admin" aria-selected="false">운영자</button>
+  </div>
 </div>
 
 <div class="container">
 
-  <!-- 참석 등록 탭 -->
-  <div id="tab-register">
-    <div class="card">
-      <div class="info-note">
-        대강당 현장 화면에 표시된 <b>6자리 인증코드</b>와 <b>현재 위치(GPS)</b>를 통해 본인의 현장 참석이 확인되어야 등록이 완료됩니다.
-      </div>
+  <!-- ===================== 참석 등록 ===================== -->
+  <div id="view-register">
 
-      <h3 class="section-title">1. 소속 선택</h3>
+    <div class="card" id="reg-form-card">
+      <div class="step-head"><div class="step-no">1</div><div class="step-title">소속과 이름</div></div>
       <div class="field">
-        <label for="sel-dept">과(부서)</label>
+        <label for="sel-dept">부서</label>
         <select id="sel-dept"><option value="">— 선택하세요 —</option></select>
       </div>
       <div class="field">
-        <label for="sel-team">팀</label>
-        <select id="sel-team" disabled><option value="">먼저 과를 선택하세요</option></select>
-      </div>
-      <div class="field">
-        <label for="sel-name">이름</label>
-        <select id="sel-name" disabled><option value="">먼저 팀을 선택하세요</option></select>
+        <label for="sel-person">이름</label>
+        <select id="sel-person" disabled><option value="">먼저 부서를 선택하세요</option></select>
       </div>
 
-      <h3 class="section-title" style="margin-top:24px;">2. 현장 인증</h3>
-
+      <div class="step-head" style="margin-top:24px;"><div class="step-no">2</div><div class="step-title">현장 인증</div></div>
+      <p class="step-sub">행사장 화면에 표시된 코드를 입력하세요.</p>
       <div class="field">
         <label for="inp-code">현장 인증코드 (6자리)</label>
-        <input type="text" id="inp-code" maxlength="6" placeholder="강당 화면에 표시된 코드 입력"
-               inputmode="numeric" autocomplete="off" style="letter-spacing: 8px; font-size: 20px; font-weight:700; text-align:center;">
+        <input type="text" id="inp-code" class="code-input" maxlength="6"
+               inputmode="numeric" autocomplete="one-time-code" placeholder="······">
       </div>
 
-      <div class="verify-row">
-        <div class="verify-icon pending" id="ico-geo">●</div>
-        <div class="verify-text">
-          <div id="txt-geo">위치 확인 대기 중</div>
-          <small id="sub-geo">아래 버튼으로 GPS 권한을 허용해주세요.</small>
-        </div>
-      </div>
-      <button class="secondary" id="btn-geo" style="margin-bottom: 16px;">현재 위치 확인하기</button>
-
-      <button id="btn-submit">참석 등록 완료</button>
-    </div>
-  </div>
-
-  <!-- 관리자 탭 -->
-  <div id="tab-admin" class="hidden">
-    <div class="card">
-      <h3 class="section-title">관리자 패널</h3>
-      <div class="admin-bar">
-        <input type="password" id="admin-pass" class="admin-pass" placeholder="관리자 PIN">
-        <button class="secondary" id="btn-admin-login">접속</button>
-      </div>
-
-      <div id="admin-content" class="hidden">
-
-        <h4 style="margin-top:0;">현장 인증코드</h4>
-        <div class="session-code" id="session-code">------</div>
-        <div class="session-meta">
-          남은 시간: <span id="code-timer">--</span>초 · 코드는 5분마다 자동 변경
-        </div>
-        <button class="secondary" id="btn-regen-code" style="margin-bottom: 16px;">새 코드 즉시 발급</button>
-
-        <h4>강당 위치 설정</h4>
-        <div class="info-note">
-          이 위치를 기준으로 반경 80m 이내에서만 등록이 허용됩니다.
-        </div>
-        <div class="field">
-          <label>위도 / 경도</label>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="venue-lat" placeholder="위도" style="flex:1;">
-            <input type="text" id="venue-lng" placeholder="경도" style="flex:1;">
+      <div id="geo-block">
+        <div class="geo-row">
+          <div class="geo-dot" id="geo-dot">·</div>
+          <div class="geo-text">
+            <div id="geo-main">위치 확인 대기</div>
+            <small id="geo-sub">버튼을 눌러 위치 권한을 허용해주세요.</small>
           </div>
         </div>
-        <button class="secondary" id="btn-set-venue" style="margin-bottom: 16px;">현재 위치를 강당 위치로 설정</button>
+        <button class="secondary" id="btn-geo" style="margin-bottom:16px;">현재 위치 확인</button>
+      </div>
 
-        <h4>참석자 명단 <span class="badge badge-info" id="cnt-badge">0명</span></h4>
-        <input type="text" id="search-attendee" class="search-input" placeholder="이름 또는 부서로 검색...">
-        <div class="stat-grid" id="stat-grid"></div>
-        <ul class="attendee-list" id="attendee-list"></ul>
+      <button id="btn-submit">참석 등록</button>
+    </div>
 
-        <div style="display:flex; gap:8px; margin-top:16px;">
-          <button class="secondary" id="btn-export" style="flex:1;">CSV 내보내기</button>
-          <button class="danger" id="btn-clear" style="flex:1;">전체 초기화</button>
+    <!-- 등록 완료: 출석 확인증 -->
+    <div id="reg-done" class="hidden">
+      <div class="ticket">
+        <div class="ticket-top">
+          <div class="ticket-eyebrow">출석 확인증</div>
+          <div class="ticket-name" id="tk-name"></div>
+          <div class="ticket-affil" id="tk-affil"></div>
+          <div class="stamp" aria-hidden="true">출석</div>
+        </div>
+        <div class="ticket-cut"></div>
+        <dl class="ticket-meta" style="margin:0;">
+          <div class="meta-row"><dt>등록 시각</dt><dd id="tk-time"></dd></div>
+          <div class="meta-row"><dt>인증코드 회차</dt><dd id="tk-serial"></dd></div>
+          <div class="meta-row"><dt>위치 확인</dt><dd id="tk-geo"></dd></div>
+          <div class="meta-row"><dt>기기 식별</dt><dd id="tk-device"></dd></div>
+        </dl>
+      </div>
+      <p class="note" id="tk-note">등록이 완료되었습니다. 이 화면을 담당자에게 보여줄 수 있습니다.</p>
+      <button class="secondary" id="btn-again">처음 화면으로</button>
+    </div>
+
+  </div>
+
+  <!-- ===================== 운영자 ===================== -->
+  <div id="view-admin" class="hidden">
+
+    <!-- 잠금 화면 -->
+    <div class="card" id="admin-lock">
+      <div id="admin-setup" class="hidden">
+        <h3 class="section-title">운영자 PIN 설정</h3>
+        <p class="note">처음 사용하는 기기입니다. 운영자 화면을 보호할 PIN을 설정하세요. PIN은 해시로만 저장됩니다.</p>
+        <div class="field"><label for="setup-pin1">새 PIN (4자리 이상)</label><input type="password" id="setup-pin1" inputmode="numeric" autocomplete="new-password"></div>
+        <div class="field"><label for="setup-pin2">새 PIN 확인</label><input type="password" id="setup-pin2" inputmode="numeric" autocomplete="new-password"></div>
+        <button id="btn-setup-pin">PIN 저장</button>
+      </div>
+      <div id="admin-login" class="hidden">
+        <h3 class="section-title">운영자 접속</h3>
+        <div class="row-tight">
+          <input type="password" id="login-pin" placeholder="운영자 PIN" inputmode="numeric" autocomplete="current-password" style="flex:1;">
+          <button class="compact" id="btn-login" style="flex-shrink:0;">접속</button>
         </div>
       </div>
+    </div>
+
+    <!-- 운영 화면 -->
+    <div id="admin-main" class="hidden">
+
+      <!-- 인증코드 보드 -->
+      <div class="card">
+        <h3 class="section-title">현장 인증코드</h3>
+        <div class="code-board">
+          <div class="code-board-top">
+            <span class="code-serial" id="cb-serial">—</span>
+            <span class="code-remain"><span id="cb-remain">--</span>초 남음</span>
+          </div>
+          <div class="code-digits" id="cb-code">······</div>
+          <div class="code-bar"><i id="cb-bar" style="width:100%"></i></div>
+          <div class="code-hint">이 화면만 행사장 스크린에 표시하세요. 만료되면 자동으로 새 코드가 발급됩니다.</div>
+        </div>
+        <div class="row mt8">
+          <select id="sel-ttl" aria-label="코드 유효 시간">
+            <option value="1">1분마다 변경</option>
+            <option value="3">3분마다 변경</option>
+            <option value="5" selected>5분마다 변경</option>
+            <option value="10">10분마다 변경</option>
+          </select>
+          <button class="secondary" id="btn-regen">새 코드 즉시 발급</button>
+        </div>
+      </div>
+
+      <!-- 실시간 현황 -->
+      <div class="card">
+        <h3 class="section-title">실시간 현황</h3>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num" id="st-total">0</div><div class="stat-label">대상 인원</div></div>
+          <div class="stat-card"><div class="stat-num" id="st-reg">0</div><div class="stat-label">등록 완료</div></div>
+          <div class="stat-card"><div class="stat-num" id="st-rate">0%</div><div class="stat-label">등록률</div></div>
+        </div>
+        <div class="field">
+          <input type="text" id="inp-search" placeholder="이름 또는 부서로 검색" aria-label="등록자 검색">
+        </div>
+        <div id="device-warn"></div>
+        <ul class="plist" id="list-reg"></ul>
+
+        <div class="sub-title">미등록자 <span class="badge badge-mute" id="unreg-count">0명</span></div>
+        <button class="secondary compact" id="btn-toggle-unreg">미등록자 명단 보기</button>
+        <ul class="plist hidden mt8" id="list-unreg"></ul>
+      </div>
+
+      <!-- 예외 기록 -->
+      <details>
+        <summary>예외 기록 <span class="badge badge-err" id="rej-count" style="margin-left:auto; margin-right:10px;">0건</span></summary>
+        <div class="details-body">
+          <p class="note">거절된 등록 시도입니다. 중복·만료 코드·위치 이탈 시도가 여기에 남아 사후 확인에 사용됩니다.</p>
+          <ul class="plist" id="list-rej"></ul>
+        </div>
+      </details>
+
+      <!-- 행사 정보 -->
+      <details>
+        <summary>행사 정보</summary>
+        <div class="details-body">
+          <div class="field"><label for="cf-title">행사명</label><input type="text" id="cf-title" placeholder="예: 상반기 직원 연수"></div>
+          <div class="field"><label for="cf-venue">장소명</label><input type="text" id="cf-venue" placeholder="예: 본관 대강당"></div>
+          <button class="secondary" id="btn-save-event">행사 정보 저장</button>
+        </div>
+      </details>
+
+      <!-- 위치 확인 설정 -->
+      <details>
+        <summary>위치 확인 설정</summary>
+        <div class="details-body">
+          <div class="field">
+            <label for="cf-geomode">위치 확인 방식</label>
+            <select id="cf-geomode">
+              <option value="off">사용 안 함</option>
+              <option value="optional">참고용 — 위치를 기록하되 등록은 허용</option>
+              <option value="required">필수 — 반경 밖이면 등록 거절</option>
+            </select>
+          </div>
+          <p class="note">실내에서는 GPS 오차가 커질 수 있습니다. "필수"는 야외·소규모 행사에서만 권장합니다.</p>
+          <div class="field">
+            <label>행사장 좌표 (위도 / 경도)</label>
+            <div class="row">
+              <input type="text" id="cf-lat" placeholder="위도" inputmode="decimal">
+              <input type="text" id="cf-lng" placeholder="경도" inputmode="decimal">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-radius">허용 반경 (m)</label>
+            <input type="number" id="cf-radius" min="20" max="2000" step="10">
+          </div>
+          <div class="row">
+            <button class="secondary" id="btn-venue-here">현재 위치를 행사장으로 설정</button>
+            <button class="secondary" id="btn-save-geo">위치 설정 저장</button>
+          </div>
+        </div>
+      </details>
+
+      <!-- 명단 관리 -->
+      <details>
+        <summary>참석 대상 명단 <span class="badge badge-mute" id="roster-count" style="margin-left:auto; margin-right:10px;">0명</span></summary>
+        <div class="details-body">
+          <p class="note">CSV 형식: <b>사번,부서,이름,직급</b> (첫 줄 제목행은 자동 인식). CSV 파일을 올리거나, 엑셀에서 복사해 붙여넣어도 됩니다. 명단은 이 기기의 브라우저에만 저장됩니다.</p>
+          <div class="field">
+            <label for="roster-file">CSV 파일 업로드 — 선택하면 바로 적용됩니다</label>
+            <input type="file" id="roster-file" accept=".csv,.txt,.tsv" style="padding:10px;">
+          </div>
+          <div class="field">
+            <label for="roster-text">또는 직접 붙여넣기</label>
+            <textarea id="roster-text" rows="6" placeholder="20240101,기획운영과,홍길동,주무관&#10;20240102,기획운영과,김철수,주무관"></textarea>
+          </div>
+          <div class="row">
+            <button class="secondary" id="btn-roster-apply">명단 적용</button>
+            <button class="secondary" id="btn-roster-sample">예시 명단 불러오기</button>
+          </div>
+          <div class="field mt16">
+            <label>
+              <input type="checkbox" id="cf-onedevice" style="width:auto; margin-right:6px; vertical-align:middle;">
+              같은 기기에서는 1명만 등록 허용 (대리 등록 억제)
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <!-- 데이터 관리 -->
+      <details>
+        <summary>내보내기·초기화</summary>
+        <div class="details-body">
+          <div class="row">
+            <button class="secondary" id="btn-csv-reg">등록자 CSV</button>
+            <button class="secondary" id="btn-csv-unreg">미등록자 CSV</button>
+          </div>
+          <button class="secondary mt8" id="btn-csv-log">전체 시도 로그 CSV</button>
+          <div class="sub-title">초기화</div>
+          <div class="row">
+            <button class="danger" id="btn-clear-log">등록 기록만 삭제</button>
+            <button class="danger" id="btn-clear-all">전체 초기화</button>
+          </div>
+          <p class="note warn mt8">"등록 기록만 삭제"는 명단·설정을 유지합니다. "전체 초기화"는 명단·설정·PIN까지 모두 삭제합니다.</p>
+        </div>
+      </details>
+
     </div>
   </div>
 
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+"use strict";
+
 /* ============================================================
-   부산남부교육지원청 — 부서/팀/직원 데이터 (이름은 임의 표본)
-   웹 검색으로 확인된 6개 과 체계를 기반으로 구성
+   저장소 키 · 유틸
 ============================================================ */
-const ORG = {
-  "행정지원과": {
-    "총무팀":   ["김민수", "박지영", "이도현", "정수빈", "최강민"],
-    "감사팀":   ["윤서연", "한지호", "오태현", "임예린", "강도윤"],
-    "관리팀":   ["송미경", "백승호", "조하늘", "권지민", "황우진"],
-    "경리팀":   ["문나영", "신유찬", "배소율", "장민재", "유다은"]
-  },
-  "유초등교육지원과": {
-    "초등교육팀":   ["이정아", "김태경", "박서윤", "정현우", "최예나"],
-    "유아교육팀":   ["송지원", "한채영", "오민서", "임도경", "강서영"],
-    "초등학사팀":   ["윤하늘", "조은비", "백지훈", "권유진", "황민호"]
-  },
-  "중등교육지원과": {
-    "중등교육팀":   ["김영수", "이수민", "박준호", "정민지", "최윤서"],
-    "생활교육팀":   ["송태윤", "한지수", "오승빈", "임채원", "강하준"],
-    "중등학사팀":   ["윤소연", "조지민", "백다영", "권시우", "황예진"],
-    "Wee센터":      ["문상미", "신예슬", "배준영", "장유빈", "유시연"]
-  },
-  "학생건강지원과": {
-    "보건안전팀":   ["김지혜", "이상훈", "박혜진", "정우석", "최보라"],
-    "급식지원팀":   ["송미영", "한대성", "오수진", "임현지", "강민준"],
-    "체육예술팀":   ["윤재훈", "조민경", "백수아", "권태민", "황지연"]
-  },
-  "학교지원과": {
-    "학교지원1팀": ["김성호", "이미라", "박종현", "정혜원", "최승우"],
-    "학교지원2팀": ["송재민", "한가영", "오지석", "임소희", "강현태"]
-  },
-  "시설과": {
-    "시설1팀":     ["김광수", "이동훈", "박재성", "정대호", "최영민"],
-    "시설2팀":     ["송기철", "한승우", "오정환", "임병준", "강성재"],
-    "시설안전팀": ["윤도현", "조재웅", "백창민", "권민철", "황태영"]
-  }
+const K = {
+  config:  "attnv2.config",
+  roster:  "attnv2.roster",
+  log:     "attnv2.log",
+  session: "attnv2.session",
+  serial:  "attnv2.serial",
+  device:  "attnv2.device"
 };
 
-/* ============================================================
-   기본 강당 좌표(부산남부교육지원청 청사)
-   필요 시 관리자 탭에서 변경 가능
-============================================================ */
-const DEFAULT_VENUE = { lat: 35.1296, lng: 129.0942 }; // 부산 남구 부근
-const ALLOWED_RADIUS_M = 80; // 80m 반경
-
-/* 관리자 PIN — 운영 시 환경에 맞게 변경 */
-const ADMIN_PIN = "1234";
-
-/* ============================================================
-   상태 (메모리 + localStorage)
-============================================================ */
-const STORAGE = {
-  attendees: "training_attendees",
-  venue: "training_venue",
-  session: "training_session"
-};
-
-let geoStatus = { ok: false, lat: null, lng: null, distance: null };
-let currentVenue = JSON.parse(localStorage.getItem(STORAGE.venue) || "null") || DEFAULT_VENUE;
-
-/* ============================================================
-   화면 초기화 — 드롭다운 채우기
-============================================================ */
 const $ = (s) => document.querySelector(s);
-const selDept = $("#sel-dept");
-const selTeam = $("#sel-team");
-const selName = $("#sel-name");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const csvq = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 
-Object.keys(ORG).forEach(dept => {
-  const opt = document.createElement("option");
-  opt.value = dept; opt.textContent = dept;
-  selDept.appendChild(opt);
-});
+function read(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function write(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+  broadcast();
+}
 
-selDept.addEventListener("change", () => {
-  selTeam.innerHTML = '<option value="">— 선택하세요 —</option>';
-  selName.innerHTML = '<option value="">먼저 팀을 선택하세요</option>';
-  selName.disabled = true;
-  if (!selDept.value) { selTeam.disabled = true; return; }
-  Object.keys(ORG[selDept.value]).forEach(team => {
-    const opt = document.createElement("option");
-    opt.value = team; opt.textContent = team;
-    selTeam.appendChild(opt);
+const DEFAULT_CONFIG = {
+  eventTitle: "", venueName: "",
+  venue: null,          // {lat, lng} — 운영자가 설정하기 전에는 없음
+  radius: 100,
+  geoMode: "optional",  // off | optional | required
+  ttlMin: 5,
+  oneDevice: true,
+  adminSalt: "", adminHash: ""
+};
+function getConfig() { return Object.assign({}, DEFAULT_CONFIG, read(K.config, {})); }
+function setConfig(patch) { write(K.config, Object.assign(getConfig(), patch)); }
+
+function getRoster() { return read(K.roster, []); }
+function getLog()    { return read(K.log, []); }
+function appendLog(entry) { const l = getLog(); l.push(entry); write(K.log, l); }
+
+function getDeviceId() {
+  let id = localStorage.getItem(K.device);
+  if (!id) {
+    id = "D-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    localStorage.setItem(K.device, id);
+  }
+  return id;
+}
+
+async function hashPin(pin, salt) {
+  const text = salt + ":" + pin;
+  if (window.crypto && crypto.subtle) {
+    try {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+    } catch { /* file:// 등에서 실패 시 폴백 */ }
+  }
+  let h = 5381;
+  for (const ch of text) h = ((h * 33) ^ ch.charCodeAt(0)) >>> 0;
+  return "f" + h.toString(16);
+}
+
+function toast(msg, type = "") {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.className = "toast show " + type;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.className = "toast", 2600);
+}
+
+/* ---------- 탭 간 동기화 ----------
+   같은 브라우저의 다른 탭/창과 상태를 공유합니다.
+   (다른 기기와의 공유는 서버 연동이 필요 — README 참고) */
+let bc = null;
+try { bc = new BroadcastChannel("attnv2-sync"); } catch { /* 미지원 환경 */ }
+function broadcast() { try { bc && bc.postMessage("sync"); } catch {} }
+function onExternalChange() { renderHeader(); fillDept(); renderAdmin(); renderCodeBoard(); }
+if (bc) bc.onmessage = onExternalChange;
+window.addEventListener("storage", onExternalChange);
+
+/* ============================================================
+   예시 명단 (데모용 — 운영 시에는 명단 관리에서 실제 CSV 적용)
+============================================================ */
+const SAMPLE_ROSTER = [
+  ["20240101","기획운영과","김민수","주무관"],["20240102","기획운영과","박지영","주무관"],
+  ["20240103","기획운영과","이도현","실무관"],["20240104","기획운영과","정수빈","주무관"],
+  ["20240105","기획운영과","김민수","사무관"],["20240106","기획운영과","윤서연","주무관"],
+  ["20240201","교육지원과","한지호","주무관"],["20240202","교육지원과","오태현","실무관"],
+  ["20240203","교육지원과","임예린","주무관"],["20240204","교육지원과","강도윤","주무관"],
+  ["20240205","교육지원과","송미경","사무관"],["20240206","교육지원과","백승호","주무관"],
+  ["20240301","안전관리과","조하늘","주무관"],["20240302","안전관리과","권지민","실무관"],
+  ["20240303","안전관리과","황우진","주무관"],["20240304","안전관리과","문나영","주무관"],
+  ["20240305","안전관리과","신유찬","주무관"],["20240306","안전관리과","배소율","사무관"],
+  ["20240401","민원지원과","장민재","주무관"],["20240402","민원지원과","유다은","실무관"],
+  ["20240403","민원지원과","이정아","주무관"],["20240404","민원지원과","김태경","주무관"],
+  ["20240405","민원지원과","박서윤","주무관"],["20240406","민원지원과","정현우","사무관"]
+].map(([id, dept, name, rank]) => ({ id, dept, name, rank }));
+
+/* 한 줄 분해 — 따옴표 필드("서울, 본청")와 엑셀 붙여넣기(탭 구분)를 지원 */
+function splitCSVLine(line) {
+  if (!line.includes(",") && line.includes("\t"))
+    return line.split("\t").map(s => s.trim());
+  const out = [];
+  let cur = "", inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; }
+      else cur += c;
+    }
+    else if (c === '"') inQ = true;
+    else if (c === ",") { out.push(cur); cur = ""; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out.map(s => s.trim());
+}
+
+function parseRosterCSV(text) {
+  const rows = text.replace(/^\uFEFF/, "").split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const out = [], errs = [], seen = new Set();
+  rows.forEach((line, i) => {
+    const cols = splitCSVLine(line);
+    if (i === 0 && /사번|emp|id/i.test(cols[0])) return; // 제목행
+    if (cols.length < 3 || !cols[0] || !cols[1] || !cols[2]) { errs.push(i + 1); return; }
+    if (seen.has(cols[0])) return; // 사번 중복은 첫 항목만
+    seen.add(cols[0]);
+    out.push({ id: cols[0], dept: cols[1], name: cols[2], rank: cols[3] || "" });
   });
-  selTeam.disabled = false;
-});
+  return { out, errs };
+}
 
-selTeam.addEventListener("change", () => {
-  selName.innerHTML = '<option value="">— 선택하세요 —</option>';
-  if (!selTeam.value) { selName.disabled = true; return; }
-  ORG[selDept.value][selTeam.value].forEach(name => {
-    const opt = document.createElement("option");
-    opt.value = name; opt.textContent = name;
-    selName.appendChild(opt);
-  });
-  selName.disabled = false;
-});
+/* ============================================================
+   헤더 (행사명 · 장소)
+============================================================ */
+function renderHeader() {
+  const cfg = getConfig();
+  $("#hd-title").textContent = cfg.eventTitle || "참석 등록";
+  $("#hd-venue").textContent = cfg.venueName || "";
+  document.title = (cfg.eventTitle ? cfg.eventTitle + " — " : "") + "현장 참석 등록";
+}
 
 /* ============================================================
    탭 전환
 ============================================================ */
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(x => {
+      x.classList.remove("active");
+      x.setAttribute("aria-selected", "false");
+    });
     t.classList.add("active");
+    t.setAttribute("aria-selected", "true");
     const id = t.dataset.tab;
-    document.getElementById("tab-register").classList.toggle("hidden", id !== "register");
-    document.getElementById("tab-admin").classList.toggle("hidden", id !== "admin");
+    $("#view-register").classList.toggle("hidden", id !== "register");
+    $("#view-admin").classList.toggle("hidden", id !== "admin");
+    if (id === "admin") { renderCodeBoard(); renderAdmin(); }
   });
 });
 
 /* ============================================================
-   토스트
+   참석 등록 — 명단 드롭다운
 ============================================================ */
-function toast(msg, type = "") {
-  const el = $("#toast");
-  el.textContent = msg;
-  el.className = "toast show " + type;
-  setTimeout(() => el.className = "toast", 2500);
+const selDept = $("#sel-dept");
+const selPerson = $("#sel-person");
+
+function fillDept() {
+  const roster = getRoster();
+  const depts = [...new Set(roster.map(p => p.dept))];
+  const cur = selDept.value;
+  selDept.innerHTML = '<option value="">— 선택하세요 —</option>';
+  depts.forEach(d => {
+    const o = document.createElement("option");
+    o.value = d; o.textContent = d;
+    selDept.appendChild(o);
+  });
+  if (depts.includes(cur)) selDept.value = cur;
+  if (depts.length === 0) {
+    selDept.innerHTML = '<option value="">명단이 없습니다 — 담당자에게 문의하세요</option>';
+  }
 }
 
+selDept.addEventListener("change", () => {
+  selPerson.innerHTML = '<option value="">— 선택하세요 —</option>';
+  if (!selDept.value) {
+    selPerson.disabled = true;
+    selPerson.innerHTML = '<option value="">먼저 부서를 선택하세요</option>';
+    return;
+  }
+  const people = getRoster().filter(p => p.dept === selDept.value);
+  const nameCount = {};
+  people.forEach(p => nameCount[p.name] = (nameCount[p.name] || 0) + 1);
+  people.forEach(p => {
+    const o = document.createElement("option");
+    o.value = p.id;
+    // 동명이인은 직급 + 사번 끝 4자리로 구분
+    o.textContent = nameCount[p.name] > 1
+      ? `${p.name} · ${p.rank || "직급 미상"} · 사번 끝 ${p.id.slice(-4)}`
+      : (p.rank ? `${p.name} · ${p.rank}` : p.name);
+    selPerson.appendChild(o);
+  });
+  selPerson.disabled = false;
+});
+
 /* ============================================================
-   GPS — 위치 확인 + 거리 계산
+   위치 확인 (참석자 측)
 ============================================================ */
+let geoStatus = { checked: false, ok: false, distance: null };
+
 function distanceMeters(a, b) {
-  const R = 6371000;
-  const toRad = d => d * Math.PI / 180;
+  const R = 6371000, toRad = d => d * Math.PI / 180;
   const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
-  const x = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  const x = Math.sin(dLat/2)**2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng/2)**2;
   return 2 * R * Math.asin(Math.sqrt(x));
 }
 
+function setGeoUI(state, main, sub) {
+  const dot = $("#geo-dot");
+  dot.className = "geo-dot " + state;
+  dot.textContent = state === "ok" ? "✓" : state === "fail" ? "✗" : "·";
+  $("#geo-main").textContent = main;
+  $("#geo-sub").textContent = sub;
+}
+
+function applyGeoMode() {
+  const cfg = getConfig();
+  $("#geo-block").classList.toggle("hidden", cfg.geoMode === "off");
+}
+
 $("#btn-geo").addEventListener("click", () => {
+  const cfg = getConfig();
   if (!navigator.geolocation) {
-    setGeo(false, "이 기기는 위치 확인을 지원하지 않습니다.");
+    setGeoUI("fail", "위치 확인 불가", "이 기기는 위치 확인을 지원하지 않습니다.");
     return;
   }
-  $("#btn-geo").disabled = true;
-  $("#btn-geo").textContent = "위치 확인 중...";
+  if (!cfg.venue) {
+    setGeoUI("fail", "행사장 좌표 미설정", "담당자가 아직 행사장 위치를 설정하지 않았습니다.");
+    return;
+  }
+  const btn = $("#btn-geo");
+  btn.disabled = true; btn.textContent = "위치 확인 중…";
   navigator.geolocation.getCurrentPosition(pos => {
     const me = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    const d = Math.round(distanceMeters(me, currentVenue));
-    geoStatus = { ok: d <= ALLOWED_RADIUS_M, lat: me.lat, lng: me.lng, distance: d };
-    if (geoStatus.ok) {
-      setGeo(true, `현장 위치 확인됨 (강당으로부터 약 ${d}m)`);
-    } else {
-      setGeo(false, `강당에서 약 ${d}m 떨어져 있어 등록이 제한됩니다 (허용 ${ALLOWED_RADIUS_M}m 이내).`);
-    }
-    $("#btn-geo").disabled = false;
-    $("#btn-geo").textContent = "위치 다시 확인";
-  }, err => {
-    setGeo(false, "위치 권한이 거부되었거나 확인에 실패했습니다.");
-    $("#btn-geo").disabled = false;
-    $("#btn-geo").textContent = "위치 확인 다시 시도";
+    const d = Math.round(distanceMeters(me, cfg.venue));
+    const ok = d <= cfg.radius;
+    geoStatus = { checked: true, ok, distance: d };
+    if (ok) setGeoUI("ok", "현장 위치 확인 완료", `행사장에서 약 ${d}m`);
+    else if (cfg.geoMode === "required")
+      setGeoUI("fail", "허용 반경 밖", `행사장에서 약 ${d}m — ${cfg.radius}m 이내에서만 등록할 수 있습니다.`);
+    else
+      setGeoUI("fail", "반경 밖 (참고용)", `행사장에서 약 ${d}m — 기록에 표시되지만 등록은 가능합니다.`);
+    btn.disabled = false; btn.textContent = "위치 다시 확인";
+  }, () => {
+    geoStatus = { checked: false, ok: false, distance: null };
+    setGeoUI("fail", "위치 확인 실패", "위치 권한이 거부되었거나 확인에 실패했습니다.");
+    btn.disabled = false; btn.textContent = "위치 확인 다시 시도";
   }, { enableHighAccuracy: true, timeout: 10000 });
 });
 
-function setGeo(ok, message) {
-  const ico = $("#ico-geo");
-  ico.className = "verify-icon " + (ok ? "ok" : "fail");
-  ico.textContent = ok ? "✓" : "✗";
-  $("#txt-geo").textContent = ok ? "위치 확인 완료" : "위치 확인 실패";
-  $("#sub-geo").textContent = message;
+/* ============================================================
+   인증코드 세션 — 발급은 운영자 화면에서만
+============================================================ */
+function randCode() {
+  if (window.crypto && crypto.getRandomValues) {
+    const a = new Uint32Array(1);
+    crypto.getRandomValues(a);
+    return String(100000 + (a[0] % 900000));
+  }
+  return String(Math.floor(100000 + Math.random() * 900000));
 }
 
-/* ============================================================
-   세션 코드 — 5분마다 자동 변경
-============================================================ */
 function genSession() {
-  const code = String(Math.floor(100000 + Math.random() * 900000));
-  const session = { code, createdAt: Date.now(), ttlMs: 5 * 60 * 1000 };
-  localStorage.setItem(STORAGE.session, JSON.stringify(session));
-  return session;
-}
-function getSession() {
-  let s = JSON.parse(localStorage.getItem(STORAGE.session) || "null");
-  if (!s || (Date.now() - s.createdAt) > s.ttlMs) s = genSession();
+  const cfg = getConfig();
+  const n = (parseInt(localStorage.getItem(K.serial) || "0", 10) + 1);
+  localStorage.setItem(K.serial, String(n));
+  const s = {
+    code: randCode(),
+    serial: "C-" + String(n).padStart(3, "0"),
+    createdAt: Date.now(),
+    ttlMs: cfg.ttlMin * 60 * 1000
+  };
+  write(K.session, s);
   return s;
 }
-function refreshSessionUI() {
-  const s = getSession();
-  $("#session-code").textContent = s.code;
-  const remain = Math.max(0, Math.floor((s.ttlMs - (Date.now() - s.createdAt)) / 1000));
-  $("#code-timer").textContent = remain;
-  if (remain === 0) refreshSessionUI();
-}
-setInterval(refreshSessionUI, 1000);
+
+/* 참석자 측은 읽기만 — 세션이 없으면 절대 만들지 않는다 */
+function readSession() { return read(K.session, null); }
+function sessionExpired(s) { return !s || (Date.now() - s.createdAt) > s.ttlMs; }
 
 /* ============================================================
-   참석 등록
+   참석 등록 처리
 ============================================================ */
 $("#btn-submit").addEventListener("click", () => {
-  const dept = selDept.value, team = selTeam.value, name = selName.value;
-  const code = $("#inp-code").value.trim();
+  const cfg = getConfig();
+  const empId = selPerson.value;
+  const codeInput = $("#inp-code").value.trim();
 
-  if (!dept || !team || !name) return toast("소속과 이름을 모두 선택해주세요.", "error");
-  if (!code || code.length !== 6) return toast("6자리 인증코드를 입력해주세요.", "error");
-  if (!geoStatus.ok) return toast("현장 위치 확인이 필요합니다.", "error");
+  if (!selDept.value || !empId) return toast("소속과 이름을 선택해주세요.", "error");
+  if (!/^\d{6}$/.test(codeInput)) return toast("6자리 인증코드를 입력해주세요.", "error");
 
-  const session = getSession();
-  if (code !== session.code) return toast("인증코드가 올바르지 않습니다.", "error");
+  const person = getRoster().find(p => p.id === empId);
+  if (!person) return toast("명단에서 대상자를 찾을 수 없습니다. 담당자에게 문의하세요.", "error");
 
-  // 중복 등록 차단
-  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
-  const dup = list.find(a => a.dept === dept && a.team === team && a.name === name);
-  if (dup) return toast(`이미 ${name}님은 등록되어 있습니다.`, "error");
+  const deviceId = getDeviceId();
+  const base = {
+    ts: new Date().toISOString(),
+    empId: person.id, name: person.name, dept: person.dept, rank: person.rank,
+    deviceId,
+    distance: geoStatus.checked ? geoStatus.distance : null,
+    geoOk: geoStatus.checked ? geoStatus.ok : null,
+    codeSerial: null
+  };
+  const reject = (status, msg) => {
+    appendLog(Object.assign(base, { status }));
+    renderAdmin();
+    toast(msg, "error");
+  };
 
-  list.push({
-    dept, team, name,
-    registeredAt: new Date().toISOString(),
-    distance: geoStatus.distance,
-    deviceId: getDeviceId()
-  });
-  localStorage.setItem(STORAGE.attendees, JSON.stringify(list));
-  toast(`${name}님 참석 등록 완료!`, "success");
+  // 1) 코드 검증
+  const session = readSession();
+  if (!session) return reject("NO_SESSION", "아직 발급된 인증코드가 없습니다. 담당자에게 문의하세요.");
+  base.codeSerial = session.serial;
+  if (sessionExpired(session)) {
+    if (codeInput === session.code) return reject("EXPIRED", "만료된 인증코드입니다. 화면의 새 코드를 입력해주세요.");
+    return reject("CODE_MISMATCH", "인증코드가 올바르지 않습니다.");
+  }
+  if (codeInput !== session.code) return reject("CODE_MISMATCH", "인증코드가 올바르지 않습니다.");
 
-  // 폼 초기화
-  selDept.value = ""; selTeam.innerHTML = '<option value="">먼저 과를 선택하세요</option>';
-  selName.innerHTML = '<option value="">먼저 팀을 선택하세요</option>';
-  selTeam.disabled = true; selName.disabled = true;
-  $("#inp-code").value = "";
+  const okList = getLog().filter(e => e.status === "OK");
+
+  // 2) 본인 중복
+  if (okList.some(e => e.empId === person.id))
+    return reject("DUP", `${person.name}님은 이미 등록되어 있습니다.`);
+
+  // 3) 기기 중복 (설정 시)
+  if (cfg.oneDevice && okList.some(e => e.deviceId === deviceId))
+    return reject("DUP_DEVICE", "이 기기에서는 이미 등록이 완료되었습니다. 본인 기기로 등록해주세요.");
+
+  // 4) 위치 (필수 모드에서만 차단)
+  if (cfg.geoMode === "required") {
+    if (!geoStatus.checked) return reject("GEO_FAIL", "현장 위치 확인이 필요합니다. '현재 위치 확인'을 눌러주세요.");
+    if (!geoStatus.ok) return reject("GEO_FAIL", "행사장 허용 반경 밖에서는 등록할 수 없습니다.");
+  }
+
+  // 등록 완료
+  const entry = Object.assign(base, { status: "OK" });
+  appendLog(entry);
+  showTicket(entry, cfg);
   renderAdmin();
 });
 
-function getDeviceId() {
-  let id = localStorage.getItem("device_id");
-  if (!id) {
-    id = "dev_" + Math.random().toString(36).slice(2, 11);
-    localStorage.setItem("device_id", id);
-  }
-  return id;
+function showTicket(e, cfg) {
+  $("#reg-form-card").classList.add("hidden");
+  $("#reg-done").classList.remove("hidden");
+  $("#tk-name").textContent = e.name;
+  $("#tk-affil").textContent = e.dept + (e.rank ? " · " + e.rank : "");
+  $("#tk-time").textContent = new Date(e.ts).toLocaleString("ko-KR",
+    { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  $("#tk-serial").textContent = e.codeSerial || "—";
+  $("#tk-geo").textContent =
+    cfg.geoMode === "off" ? "사용 안 함"
+    : e.distance == null ? "미확인"
+    : `약 ${e.distance}m ${e.geoOk ? "(반경 내)" : "(반경 밖)"}`;
+  $("#tk-device").textContent = e.deviceId;
+  $("#tk-note").textContent = cfg.oneDevice
+    ? "등록이 완료되었습니다. 이 기기에서는 추가 등록이 제한됩니다."
+    : "등록이 완료되었습니다. 이 화면을 담당자에게 보여줄 수 있습니다.";
 }
 
+$("#btn-again").addEventListener("click", () => {
+  $("#reg-done").classList.add("hidden");
+  $("#reg-form-card").classList.remove("hidden");
+  selDept.value = "";
+  selPerson.disabled = true;
+  selPerson.innerHTML = '<option value="">먼저 부서를 선택하세요</option>';
+  $("#inp-code").value = "";
+  geoStatus = { checked: false, ok: false, distance: null };
+  setGeoUI("", "위치 확인 대기", "버튼을 눌러 위치 권한을 허용해주세요.");
+  $("#btn-geo").textContent = "현재 위치 확인";
+});
+
 /* ============================================================
-   관리자 패널
+   운영자 — 잠금 · PIN
 ============================================================ */
-$("#btn-admin-login").addEventListener("click", () => {
-  if ($("#admin-pass").value === ADMIN_PIN) {
-    $("#admin-content").classList.remove("hidden");
-    $("#venue-lat").value = currentVenue.lat;
-    $("#venue-lng").value = currentVenue.lng;
-    refreshSessionUI();
-    renderAdmin();
+let adminUnlocked = false;
+
+function renderLock() {
+  const cfg = getConfig();
+  const isSetup = !cfg.adminHash;
+  $("#admin-setup").classList.toggle("hidden", !isSetup);
+  $("#admin-login").classList.toggle("hidden", isSetup);
+  $("#admin-lock").classList.toggle("hidden", adminUnlocked);
+  $("#admin-main").classList.toggle("hidden", !adminUnlocked);
+}
+
+$("#btn-setup-pin").addEventListener("click", async () => {
+  const p1 = $("#setup-pin1").value, p2 = $("#setup-pin2").value;
+  if (p1.length < 4) return toast("PIN은 4자리 이상이어야 합니다.", "error");
+  if (p1 !== p2) return toast("두 PIN이 일치하지 않습니다.", "error");
+  const salt = Math.random().toString(36).slice(2, 12);
+  const h = await hashPin(p1, salt);
+  setConfig({ adminSalt: salt, adminHash: h });
+  $("#setup-pin1").value = ""; $("#setup-pin2").value = "";
+  adminUnlocked = true;
+  renderLock(); enterAdmin();
+  toast("운영자 PIN이 설정되었습니다.", "success");
+});
+
+$("#btn-login").addEventListener("click", doLogin);
+$("#login-pin").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+async function doLogin() {
+  const cfg = getConfig();
+  const h = await hashPin($("#login-pin").value, cfg.adminSalt);
+  if (h === cfg.adminHash) {
+    adminUnlocked = true;
+    $("#login-pin").value = "";
+    renderLock(); enterAdmin();
   } else {
     toast("PIN이 올바르지 않습니다.", "error");
   }
-});
-
-$("#btn-regen-code").addEventListener("click", () => {
-  genSession(); refreshSessionUI();
-  toast("새 인증코드가 발급되었습니다.", "success");
-});
-
-$("#btn-set-venue").addEventListener("click", () => {
-  navigator.geolocation.getCurrentPosition(pos => {
-    currentVenue = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    localStorage.setItem(STORAGE.venue, JSON.stringify(currentVenue));
-    $("#venue-lat").value = currentVenue.lat;
-    $("#venue-lng").value = currentVenue.lng;
-    toast("강당 위치가 현재 위치로 설정되었습니다.", "success");
-  }, () => toast("위치 확인 실패", "error"));
-});
-
-[$("#venue-lat"), $("#venue-lng")].forEach(inp => {
-  inp.addEventListener("change", () => {
-    const lat = parseFloat($("#venue-lat").value), lng = parseFloat($("#venue-lng").value);
-    if (!isNaN(lat) && !isNaN(lng)) {
-      currentVenue = { lat, lng };
-      localStorage.setItem(STORAGE.venue, JSON.stringify(currentVenue));
-      toast("강당 좌표가 업데이트되었습니다.", "success");
-    }
-  });
-});
-
-$("#search-attendee").addEventListener("input", renderAdmin);
-
-function renderAdmin() {
-  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
-  const q = $("#search-attendee").value.toLowerCase();
-  const filtered = list.filter(a =>
-    a.name.toLowerCase().includes(q) ||
-    a.dept.toLowerCase().includes(q) ||
-    a.team.toLowerCase().includes(q));
-
-  $("#cnt-badge").textContent = `${filtered.length}명`;
-
-  // 통계
-  const byDept = {};
-  list.forEach(a => byDept[a.dept] = (byDept[a.dept] || 0) + 1);
-  const top3 = Object.entries(byDept).sort((a,b) => b[1]-a[1]).slice(0,3);
-  const grid = $("#stat-grid");
-  grid.innerHTML = `
-    <div class="stat-card"><div class="stat-num">${list.length}</div><div class="stat-label">전체 참석</div></div>
-    <div class="stat-card"><div class="stat-num">${Object.keys(byDept).length}</div><div class="stat-label">참여 부서</div></div>
-    <div class="stat-card"><div class="stat-num">${top3[0] ? top3[0][1] : 0}</div><div class="stat-label">최다 부서 인원</div></div>
-  `;
-
-  const ul = $("#attendee-list");
-  ul.innerHTML = "";
-  if (filtered.length === 0) {
-    ul.innerHTML = `<li class="attendee-item" style="color:var(--muted); justify-content:center;">등록된 참석자가 없습니다.</li>`;
-    return;
-  }
-  filtered
-    .sort((a,b) => new Date(b.registeredAt) - new Date(a.registeredAt))
-    .forEach(a => {
-      const li = document.createElement("li");
-      li.className = "attendee-item";
-      const t = new Date(a.registeredAt);
-      const time = t.toLocaleString("ko-KR", { hour:"2-digit", minute:"2-digit", second:"2-digit" });
-      li.innerHTML = `
-        <div>
-          <div class="attendee-name">${a.name}</div>
-          <div class="attendee-meta">${a.dept} · ${a.team}</div>
-        </div>
-        <div class="attendee-meta" style="text-align:right;">
-          ${time}<br>
-          <span class="badge badge-success">${a.distance}m</span>
-        </div>`;
-      ul.appendChild(li);
-    });
 }
 
-$("#btn-export").addEventListener("click", () => {
-  const list = JSON.parse(localStorage.getItem(STORAGE.attendees) || "[]");
-  if (list.length === 0) return toast("내보낼 데이터가 없습니다.", "error");
-  const header = "부서,팀,이름,등록시각,GPS거리(m),기기ID";
-  const rows = list.map(a => [
-    a.dept, a.team, a.name,
-    new Date(a.registeredAt).toLocaleString("ko-KR"),
-    a.distance, a.deviceId
-  ].join(","));
-  const csv = "﻿" + [header, ...rows].join("\n");
+function enterAdmin() {
+  const cfg = getConfig();
+  $("#cf-title").value = cfg.eventTitle;
+  $("#cf-venue").value = cfg.venueName;
+  $("#cf-geomode").value = cfg.geoMode;
+  $("#cf-lat").value = cfg.venue ? cfg.venue.lat : "";
+  $("#cf-lng").value = cfg.venue ? cfg.venue.lng : "";
+  $("#cf-radius").value = cfg.radius;
+  $("#cf-onedevice").checked = cfg.oneDevice;
+  $("#sel-ttl").value = String(cfg.ttlMin);
+  if (sessionExpired(readSession())) genSession();
+  renderCodeBoard();
+  renderAdmin();
+}
+
+/* ============================================================
+   운영자 — 코드 보드 (1초 갱신 · 만료 시 자동 재발급)
+============================================================ */
+function renderCodeBoard() {
+  if (!adminUnlocked) return;
+  let s = readSession();
+  if (sessionExpired(s)) s = genSession();
+  $("#cb-code").textContent = s.code;
+  $("#cb-serial").textContent = s.serial;
+  const remain = Math.max(0, Math.ceil((s.ttlMs - (Date.now() - s.createdAt)) / 1000));
+  $("#cb-remain").textContent = remain;
+  const bar = $("#cb-bar");
+  bar.style.width = (remain / (s.ttlMs / 1000) * 100) + "%";
+  bar.classList.toggle("low", remain <= 30);
+}
+setInterval(renderCodeBoard, 1000);
+
+$("#btn-regen").addEventListener("click", () => {
+  genSession(); renderCodeBoard();
+  toast("새 인증코드가 발급되었습니다.", "success");
+});
+$("#sel-ttl").addEventListener("change", () => {
+  setConfig({ ttlMin: parseInt($("#sel-ttl").value, 10) });
+  genSession(); renderCodeBoard();
+  toast("코드 유효 시간이 변경되어 새 코드가 발급되었습니다.", "success");
+});
+
+/* ============================================================
+   운영자 — 행사 · 위치 · 명단 설정
+============================================================ */
+$("#btn-save-event").addEventListener("click", () => {
+  setConfig({ eventTitle: $("#cf-title").value.trim(), venueName: $("#cf-venue").value.trim() });
+  renderHeader();
+  toast("행사 정보가 저장되었습니다.", "success");
+});
+
+$("#btn-save-geo").addEventListener("click", () => {
+  const lat = parseFloat($("#cf-lat").value), lng = parseFloat($("#cf-lng").value);
+  const radius = Math.max(20, parseInt($("#cf-radius").value, 10) || 100);
+  const geoMode = $("#cf-geomode").value;
+  const venue = (!isNaN(lat) && !isNaN(lng)) ? { lat, lng } : null;
+  if (geoMode !== "off" && !venue)
+    return toast("위치 확인을 사용하려면 행사장 좌표가 필요합니다.", "error");
+  setConfig({ venue, radius, geoMode });
+  applyGeoMode();
+  toast("위치 설정이 저장되었습니다.", "success");
+});
+
+$("#btn-venue-here").addEventListener("click", () => {
+  if (!navigator.geolocation) return toast("이 기기는 위치 확인을 지원하지 않습니다.", "error");
+  navigator.geolocation.getCurrentPosition(pos => {
+    $("#cf-lat").value = pos.coords.latitude.toFixed(6);
+    $("#cf-lng").value = pos.coords.longitude.toFixed(6);
+    toast("현재 위치를 좌표란에 입력했습니다. '위치 설정 저장'을 눌러 확정하세요.", "success");
+  }, () => toast("위치 확인에 실패했습니다.", "error"),
+  { enableHighAccuracy: true, timeout: 10000 });
+});
+
+function applyRoster(text, sourceLabel) {
+  const { out, errs } = parseRosterCSV(text);
+  if (out.length === 0) {
+    toast(`${sourceLabel}에서 명단을 읽지 못했습니다. 형식(사번,부서,이름,직급)을 확인해주세요.`, "error");
+    return;
+  }
+  write(K.roster, out);
+  fillDept(); renderAdmin();
+  toast(`${sourceLabel}에서 명단 ${out.length}명을 적용했습니다.` +
+        (errs.length ? ` (${errs.length}줄 형식 오류 제외)` : ""), "success");
+}
+
+$("#btn-roster-apply").addEventListener("click", () => {
+  applyRoster($("#roster-text").value, "입력란");
+});
+
+$("#roster-file").addEventListener("change", async (ev) => {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const buf = await file.arrayBuffer();
+  let text = new TextDecoder("utf-8", { fatal: false }).decode(buf);
+  if (text.includes("�")) {
+    // UTF-8이 아니면 한글 엑셀 저장 기본값(EUC-KR/CP949)으로 재시도
+    try { text = new TextDecoder("euc-kr").decode(buf); } catch { /* 미지원 시 UTF-8 결과 유지 */ }
+  }
+  text = text.replace(/^\uFEFF/, "");
+  $("#roster-text").value = text;
+  applyRoster(text, `파일(${file.name})`);
+  ev.target.value = ""; // 같은 파일을 다시 선택해도 change가 발생하도록
+});
+
+$("#btn-roster-sample").addEventListener("click", () => {
+  $("#roster-text").value =
+    "사번,부서,이름,직급\n" +
+    SAMPLE_ROSTER.map(p => [p.id, p.dept, p.name, p.rank].join(",")).join("\n");
+  toast("예시 명단을 입력란에 불러왔습니다. '명단 적용'을 눌러 확정하세요.", "success");
+});
+
+$("#cf-onedevice").addEventListener("change", () => {
+  setConfig({ oneDevice: $("#cf-onedevice").checked });
+  renderAdmin();
+});
+
+/* ============================================================
+   운영자 — 현황 렌더링
+============================================================ */
+const STATUS_LABEL = {
+  DUP: ["중복 등록", "badge-warn"],
+  DUP_DEVICE: ["기기 중복", "badge-warn"],
+  EXPIRED: ["만료 코드", "badge-err"],
+  CODE_MISMATCH: ["코드 불일치", "badge-err"],
+  NO_SESSION: ["코드 미발급", "badge-mute"],
+  GEO_FAIL: ["위치 이탈", "badge-err"]
+};
+
+const fmtTime = (iso) => new Date(iso).toLocaleTimeString("ko-KR",
+  { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+function renderAdmin() {
+  if (!adminUnlocked) return;
+  const roster = getRoster();
+  const log = getLog();
+  const okList = log.filter(e => e.status === "OK");
+  const rejList = log.filter(e => e.status !== "OK");
+  const cfg = getConfig();
+
+  // 통계
+  $("#st-total").textContent = roster.length;
+  $("#st-reg").textContent = okList.length;
+  $("#st-rate").textContent = roster.length
+    ? Math.round(okList.length / roster.length * 100) + "%" : "—";
+  $("#roster-count").textContent = roster.length + "명";
+
+  // 등록자 목록 (검색)
+  const q = $("#inp-search").value.trim().toLowerCase();
+  const filtered = okList.filter(e =>
+    e.name.toLowerCase().includes(q) || e.dept.toLowerCase().includes(q));
+  const ul = $("#list-reg");
+  if (filtered.length === 0) {
+    ul.innerHTML = '<li class="p-empty">' + (okList.length ? "검색 결과가 없습니다." : "아직 등록자가 없습니다.") + "</li>";
+  } else {
+    ul.innerHTML = filtered
+      .slice().sort((a, b) => b.ts.localeCompare(a.ts))
+      .map(e => {
+        const geoBadge = cfg.geoMode === "off" || e.distance == null ? ""
+          : e.geoOk
+            ? `<span class="badge badge-ok">${e.distance}m</span>`
+            : `<span class="badge badge-warn">${e.distance}m 밖</span>`;
+        return `<li>
+          <div>
+            <div class="p-name">${esc(e.name)}</div>
+            <div class="p-meta">${esc(e.dept)}${e.rank ? " · " + esc(e.rank) : ""} · ${esc(e.deviceId)}</div>
+          </div>
+          <div class="p-right">${fmtTime(e.ts)}<br>${esc(e.codeSerial || "")} ${geoBadge}</div>
+        </li>`;
+      }).join("");
+  }
+
+  // 같은 기기 다인 등록 경고 (1기기 1명 제한을 껐을 때)
+  const warnBox = $("#device-warn");
+  if (!cfg.oneDevice) {
+    const byDev = {};
+    okList.forEach(e => (byDev[e.deviceId] = byDev[e.deviceId] || []).push(e.name));
+    const multi = Object.entries(byDev).filter(([, names]) => names.length > 1);
+    warnBox.innerHTML = multi.length
+      ? `<p class="note warn">같은 기기에서 여러 명이 등록되었습니다 — ` +
+        multi.map(([dev, names]) => `${esc(dev)}: ${esc(names.join(", "))}`).join(" / ") + "</p>"
+      : "";
+  } else {
+    warnBox.innerHTML = "";
+  }
+
+  // 미등록자
+  const okIds = new Set(okList.map(e => e.empId));
+  const unreg = roster.filter(p => !okIds.has(p.id));
+  $("#unreg-count").textContent = unreg.length + "명";
+  $("#list-unreg").innerHTML = unreg.length
+    ? unreg.map(p => `<li>
+        <div><div class="p-name">${esc(p.name)}</div>
+        <div class="p-meta">${esc(p.dept)}${p.rank ? " · " + esc(p.rank) : ""}</div></div>
+        <div class="p-right">${esc(p.id.slice(-4))}</div>
+      </li>`).join("")
+    : '<li class="p-empty">전원 등록 완료</li>';
+
+  // 예외 기록
+  $("#rej-count").textContent = rejList.length + "건";
+  $("#list-rej").innerHTML = rejList.length
+    ? rejList.slice(-40).reverse().map(e => {
+        const [label, cls] = STATUS_LABEL[e.status] || [e.status, "badge-mute"];
+        return `<li>
+          <div><div class="p-name">${esc(e.name)} <span class="badge ${cls}">${label}</span></div>
+          <div class="p-meta">${esc(e.dept)} · ${esc(e.deviceId)}</div></div>
+          <div class="p-right">${fmtTime(e.ts)}</div>
+        </li>`;
+      }).join("")
+    : '<li class="p-empty">거절된 시도가 없습니다.</li>';
+}
+
+$("#inp-search").addEventListener("input", renderAdmin);
+$("#btn-toggle-unreg").addEventListener("click", () => {
+  const list = $("#list-unreg");
+  const show = list.classList.toggle("hidden");
+  $("#btn-toggle-unreg").textContent = show ? "미등록자 명단 보기" : "미등록자 명단 접기";
+});
+
+/* ============================================================
+   내보내기 · 초기화
+============================================================ */
+function downloadCSV(filename, header, rows) {
+  if (rows.length === 0) return toast("내보낼 데이터가 없습니다.", "error");
+  const csv = "\uFEFF" + [header.map(csvq).join(","), ...rows.map(r => r.map(csvq).join(","))].join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = `연수참석자_${new Date().toISOString().slice(0,10)}.csv`;
+  a.href = url;
+  a.download = filename + "_" + new Date().toISOString().slice(0, 10) + ".csv";
   a.click();
   URL.revokeObjectURL(url);
   toast("CSV 파일이 다운로드되었습니다.", "success");
+}
+
+$("#btn-csv-reg").addEventListener("click", () => {
+  const rows = getLog().filter(e => e.status === "OK").map(e => [
+    e.empId, e.dept, e.name, e.rank,
+    new Date(e.ts).toLocaleString("ko-KR"),
+    e.codeSerial || "", e.distance == null ? "" : e.distance, e.deviceId
+  ]);
+  downloadCSV("참석등록자", ["사번","부서","이름","직급","등록시각","코드회차","GPS거리m","기기ID"], rows);
 });
 
-$("#btn-clear").addEventListener("click", () => {
-  if (!confirm("정말 모든 참석 기록을 삭제하시겠습니까?")) return;
-  localStorage.removeItem(STORAGE.attendees);
-  renderAdmin();
-  toast("참석 기록이 초기화되었습니다.", "success");
+$("#btn-csv-unreg").addEventListener("click", () => {
+  const okIds = new Set(getLog().filter(e => e.status === "OK").map(e => e.empId));
+  const rows = getRoster().filter(p => !okIds.has(p.id)).map(p => [p.id, p.dept, p.name, p.rank]);
+  downloadCSV("미등록자", ["사번","부서","이름","직급"], rows);
 });
 
-renderAdmin();
+$("#btn-csv-log").addEventListener("click", () => {
+  const rows = getLog().map(e => [
+    e.ts, e.status, e.empId, e.dept, e.name, e.rank,
+    e.codeSerial || "", e.distance == null ? "" : e.distance, e.deviceId
+  ]);
+  downloadCSV("전체시도로그", ["시각","결과","사번","부서","이름","직급","코드회차","GPS거리m","기기ID"], rows);
+});
+
+$("#btn-clear-log").addEventListener("click", () => {
+  if (!confirm("등록·시도 기록을 모두 삭제할까요?\n(명단과 설정은 유지됩니다)")) return;
+  localStorage.removeItem(K.log);
+  broadcast(); renderAdmin();
+  toast("등록 기록이 삭제되었습니다.", "success");
+});
+
+$("#btn-clear-all").addEventListener("click", () => {
+  if (!confirm("전체 초기화: 명단·설정·PIN·기록이 모두 삭제됩니다.\n계속할까요?")) return;
+  if (!confirm("정말 전체 초기화할까요? 되돌릴 수 없습니다.")) return;
+  [K.config, K.roster, K.log, K.session, K.serial].forEach(k => localStorage.removeItem(k));
+  broadcast();
+  adminUnlocked = false;
+  location.reload();
+});
+
+/* ============================================================
+   시작
+============================================================ */
+renderHeader();
+fillDept();
+applyGeoMode();
+renderLock();
 </script>
 </body>
 </html>
